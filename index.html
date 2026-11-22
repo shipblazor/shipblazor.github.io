@@ -375,6 +375,7 @@ db.Invoices.Add(<span class="k">new</span>() { Amount = <span class="s">99m</spa
     <h2>Stop rebuilding the plumbing</h2>
     <p class="lead" style="color:#ddd6ff;margin:0 auto 28px">Start your next SaaS on a foundation that already works.</p>
     <a class="btn" data-checkout="solo" href="#pricing">Get ShipBlazor for $149</a>
+    <a class="btn btn-ghost" data-demo href="#" target="_blank" rel="noopener" style="color:#fff;border-color:rgba(255,255,255,.4)">Try the live demo</a>
   </div>
 </section>
 
@@ -397,7 +398,7 @@ db.Invoices.Add(<span class="k">new</span>() { Amount = <span class="s">99m</spa
     team: "https://olowoyeye.gumroad.com/l/xuczqa",
   };
   // The live demo (Demo:Enabled). Leave empty to hide the "Try the live demo" buttons.
-  const DEMO = "";
+  const DEMO = "https://shipblazor-demo.happycliff-c6fe1d11.northeurope.azurecontainerapps.io/";
   document.querySelectorAll("[data-demo]").forEach(a => { if (DEMO) a.href = DEMO; else a.remove(); });
   document.querySelectorAll("[data-checkout]").forEach(a => {
     const url = CHECKOUT[a.dataset.checkout];
