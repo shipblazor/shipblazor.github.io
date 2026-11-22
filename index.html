@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShipBlazor – The .NET SaaS starter kit for Blazor</title>
+<meta name="description" content="Launch your .NET SaaS in days. Multi-tenant organizations, Stripe billing, a REST API and webhooks, metered AI, admin, sample data, .NET Aspire and Azure deployment, built and tested for .NET 10 and Blazor.">
+<link rel="canonical" href="https://shipblazor.github.io/">
+<meta property="og:title" content="ShipBlazor – The .NET SaaS starter kit for Blazor">
+<meta property="og:description" content="Multi-tenancy, Stripe billing, email, marketing site and Azure deployment for .NET 10 and Blazor. Skip the plumbing, ship the product.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shipblazor.github.io/">
+<meta property="og:image" content="https://shipblazor.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236d4aff'/%3E%3Cpath d='M9 19l5-11h4l-3 7h6l-8 10 2-6z' fill='white'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #0a0d1a; --bg-2: #11152a; --ink: #0f1222; --text: #3b4057; --muted: #6b7088;
+    --line: #e7e8ef; --violet: #6d4aff; --violet-2: #8f74ff; --cyan: #22d3ee; --green: #16a34a;
+    --radius: 14px; --max: 1120px;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: #fff; }
+  a { color: var(--violet); }
+  h1, h2, h3 { color: var(--ink); line-height: 1.15; margin: 0 0 .5em; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.8rem, 3.2vw, 2.5rem); }
+  h3 { font-size: 1.1rem; letter-spacing: -0.01em; }
+  p { margin: 0 0 1em; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  .eyebrow { font: 600 .78rem/1 var(--mono); text-transform: uppercase; letter-spacing: .12em; color: var(--violet); margin-bottom: 14px; }
+  .center { text-align: center; }
+  .lead { font-size: 1.15rem; color: var(--muted); max-width: 680px; }
+  .center .lead { margin-left: auto; margin-right: auto; }
+  section { padding: 96px 0; }
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 10px; font-weight: 600; text-decoration: none; border: 1px solid transparent; transition: transform .12s ease, box-shadow .12s ease, background .12s ease; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--violet); color: #fff; box-shadow: 0 8px 24px -8px rgba(109,74,255,.7); }
+  .btn-primary:hover { background: #5b37f5; }
+  .btn-ghost { color: #fff; border-color: rgba(255,255,255,.22); }
+  .btn-ghost:hover { background: rgba(255,255,255,.06); }
+  .btn-outline { color: var(--ink); border-color: var(--line); background: #fff; }
+
+  /* Nav */
+  .nav { position: sticky; top: 0; z-index: 10; background: rgba(10,13,26,.82); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.06); }
+  .nav .wrap { display: flex; align-items: center; height: 64px; gap: 28px; }
+  .logo { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 800; text-decoration: none; letter-spacing: -0.02em; font-size: 1.1rem; }
+  .logo-mark { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--violet), var(--cyan)); display: grid; place-items: center; }
+  .nav-links { display: flex; gap: 22px; margin-left: 8px; }
+  .nav-links a { color: #b8bdd6; text-decoration: none; font-size: .95rem; }
+  .nav-links a:hover { color: #fff; }
+  .nav .btn { margin-left: auto; padding: 9px 16px; font-size: .92rem; }
+
+  /* Hero */
+  .hero { background: radial-gradient(1000px 500px at 70% -10%, rgba(109,74,255,.35), transparent 60%), radial-gradient(700px 400px at 0% 10%, rgba(34,211,238,.12), transparent 60%), var(--bg); color: #c9cde3; padding: 96px 0 0; overflow: hidden; }
+  .hero h1 { color: #fff; font-size: clamp(2.4rem, 5.6vw, 4.1rem); max-width: 860px; margin: 0 auto 22px; }
+  .hero h1 .grad { background: linear-gradient(90deg, #a996ff, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .lead { color: #a7acc6; }
+  .pill { display: inline-flex; gap: 8px; align-items: center; padding: 6px 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; font-size: .85rem; color: #cfd3ea; margin-bottom: 26px; background: rgba(255,255,255,.04); }
+  .pill b { color: #fff; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 4px rgba(52,211,153,.18); }
+  .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 30px 0 14px; }
+  .hero small { color: #7e84a3; }
+
+  .terminal { max-width: 860px; margin: 56px auto 0; background: #0d1120; border: 1px solid rgba(255,255,255,.08); border-bottom: 0; border-radius: 14px 14px 0 0; box-shadow: 0 -20px 80px -20px rgba(109,74,255,.45); text-align: left; }
+  .terminal-bar { display: flex; gap: 7px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .terminal-bar span { width: 11px; height: 11px; border-radius: 50%; background: #2a2f47; }
+  .terminal pre { margin: 0; padding: 22px 24px 30px; font: .92rem/1.8 var(--mono); color: #cfd3ea; overflow-x: auto; }
+  .t-prompt { color: var(--violet-2); } .t-ok { color: #34d399; } .t-dim { color: #6b7192; }
+
+  /* Problem / time */
+  .time-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .time-table { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .time-row { display: flex; justify-content: space-between; padding: 13px 18px; border-bottom: 1px solid var(--line); font-size: .96rem; }
+  .time-row:last-child { border-bottom: 0; }
+  .time-row span:last-child { font-family: var(--mono); color: var(--muted); font-size: .88rem; }
+  .time-total { background: #f6f4ff; font-weight: 700; color: var(--ink); }
+  .time-total span:last-child { color: var(--violet); font-weight: 700; }
+  .note { font-size: .82rem; color: var(--muted); margin-top: 10px; }
+
+  /* Features */
+  .features { background: #f7f8fc; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 48px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+  .card .icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #f1edff; color: var(--violet); margin-bottom: 16px; }
+  .card p { margin: 0; color: var(--muted); font-size: .96rem; }
+  .card ul { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: .9rem; }
+
+  /* Code */
+  .code-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; }
+  .code { background: #0d1120; border-radius: var(--radius); padding: 24px; font: .88rem/1.75 var(--mono); color: #cfd3ea; overflow-x: auto; box-shadow: 0 30px 60px -30px rgba(13,17,32,.6); }
+  .code .k { color: #a996ff; } .code .t { color: #67e8f9; } .code .c { color: #6b7192; } .code .s { color: #86efac; }
+  .checks { list-style: none; padding: 0; margin: 20px 0 0; }
+  .checks li { padding-left: 30px; position: relative; margin-bottom: 12px; }
+  .checks li::before { content: ""; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: #e9fbef url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2316a34a'%3E%3Cpath d='M8 13.2 4.8 10l-1.1 1.1L8 15.4l8.3-8.3-1.1-1.1z'/%3E%3C/svg%3E") center/14px no-repeat; }
+
+  /* Stack */
+  .stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px; }
+  .chip { border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font-size: .92rem; color: var(--ink); background: #fff; }
+
+  /* Principles */
+  .principles { background: var(--bg); color: #b8bdd6; }
+  .principles h2, .principles h3 { color: #fff; }
+  .principles .lead { color: #9097b5; }
+  .principles .card { background: var(--bg-2); border-color: rgba(255,255,255,.07); }
+  .principles .card p { color: #9097b5; }
+  .principles .icon { background: rgba(109,74,255,.18); color: #b5a6ff; }
+
+  /* Pricing */
+  .plans { display: grid; grid-template-columns: repeat(2, minmax(0, 380px)); gap: 22px; justify-content: center; margin-top: 48px; }
+  .plan { border: 1px solid var(--line); border-radius: 18px; padding: 32px; position: relative; background: #fff; }
+  .plan.featured { border: 2px solid var(--violet); box-shadow: 0 30px 60px -30px rgba(109,74,255,.45); }
+  .plan .badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--violet); color: #fff; font-size: .78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; white-space: nowrap; }
+  .price { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 4px; }
+  .price b { font-size: 3rem; color: var(--ink); letter-spacing: -0.03em; }
+  .price s { color: var(--muted); font-size: 1.2rem; }
+  .plan .sub { color: var(--muted); font-size: .92rem; margin-bottom: 18px; }
+  .plan { display: flex; flex-direction: column; }
+  .plan .checks { flex-grow: 1; }
+  .plan .btn { width: 100%; justify-content: center; margin-top: 22px; }
+  .guarantee { text-align: center; color: var(--muted); font-size: .92rem; margin-top: 26px; }
+
+  /* FAQ */
+  .faq { max-width: 780px; margin: 40px auto 0; }
+  details { border-bottom: 1px solid var(--line); padding: 18px 4px; }
+  summary { cursor: pointer; font-weight: 600; color: var(--ink); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--violet); font-size: 1.3rem; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 12px 0 0; color: var(--muted); }
+
+  /* Final CTA */
+  .final { background: linear-gradient(135deg, #2b1a8f 0%, var(--violet) 55%, #3aa0ff 100%); color: #e8e4ff; text-align: center; border-radius: 22px; padding: 64px 24px; margin: 0 24px; }
+  .final h2 { color: #fff; }
+  .final .btn { background: #fff; color: var(--ink); }
+
+  footer { padding: 48px 0; color: var(--muted); font-size: .9rem; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer a { color: var(--muted); text-decoration: none; margin-left: 18px; }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    .time-grid, .code-grid { grid-template-columns: 1fr; gap: 32px; }
+    .plans { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    section { padding: 72px 0; }
+    .grid { grid-template-columns: 1fr; }
+    footer a { margin: 0 14px 0 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="logo" href="#"><span class="logo-mark"><svg width="16" height="16" viewBox="0 0 32 32"><path d="M9 19l5-11h4l-3 7h6l-8 10 2-6z" fill="white"/></svg></span>ShipBlazor</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#code">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-primary" data-checkout="solo" href="#pricing">Get ShipBlazor</a>
+  </div>
+</nav>
+
+<header class="hero center">
+  <div class="wrap">
+    <div class="pill"><span class="dot"></span> Built for <b>.NET 10 LTS</b> and Blazor</div>
+    <h1>Launch your .NET SaaS in <span class="grad">days, not months</span></h1>
+    <p class="lead">ShipBlazor is a production-ready Blazor starter kit. Organizations, Stripe billing, email, a marketing site, an admin area and Azure deployment are already built and tested, so you can start on the part your customers pay for.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" data-checkout="solo" href="#pricing">Get ShipBlazor · $149</a>
+      <a class="btn btn-ghost" data-demo href="#" target="_blank" rel="noopener">Try the live demo</a>
+      <a class="btn btn-ghost" href="#features">See what's inside</a>
+    </div>
+    <small>One-time payment · Full source code · Unlimited projects</small>
+
+    <div class="terminal" aria-label="Terminal example">
+      <div class="terminal-bar"><span></span><span></span><span></span></div>
+<pre><span class="t-prompt">$</span> dotnet new install ShipBlazor.Templates.1.0.0.nupkg
+<span class="t-prompt">$</span> dotnet new shipblazor -n Acme
+<span class="t-ok">The template "ShipBlazor SaaS Starter" was created successfully.</span>
+<span class="t-prompt">$</span> cd Acme &amp;&amp; dotnet run --project src/Acme.Web
+<span class="t-dim">info: Now listening on: https://localhost:7219</span>
+<span class="t-prompt">$</span> azd up   <span class="t-dim"># when you're ready: live on Azure</span></pre>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap time-grid">
+    <div>
+      <div class="eyebrow">The problem</div>
+      <h2>Every SaaS needs the same plumbing before it can earn a dollar</h2>
+      <p class="lead">Sign-in, teams, roles, invitations, subscriptions, webhooks, emails, a landing page, SEO and deployment. None of it is your product, and all of it has to be right. Data leaking between customers or a missed webhook is the kind of bug that costs you customers.</p>
+      <p>ShipBlazor gives you all of it in a codebase you can read in an afternoon.</p>
+    </div>
+    <div>
+      <div class="time-table">
+        <div class="time-row"><span>Accounts, 2FA, passkeys</span><span>3–5 days</span></div>
+        <div class="time-row"><span>Organizations, roles, data isolation</span><span>1–2 weeks</span></div>
+        <div class="time-row"><span>Email invitations</span><span>3–4 days</span></div>
+        <div class="time-row"><span>Stripe checkout, portal, webhooks, limits</span><span>1–2 weeks</span></div>
+        <div class="time-row"><span>Transactional email</span><span>2–3 days</span></div>
+        <div class="time-row"><span>Marketing site, blog, SEO</span><span>1 week</span></div>
+        <div class="time-row"><span>Admin area</span><span>2–3 days</span></div>
+        <div class="time-row"><span>Docker, Azure, three databases</span><span>1 week</span></div>
+        <div class="time-row time-total"><span>Building it yourself</span><span>6–9 weeks</span></div>
+      </div>
+      <p class="note">Our estimate for one experienced .NET developer, including testing.</p>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="features">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">What's inside</div>
+      <h2>Everything your customers expect on day one</h2>
+      <p class="lead">Working, tested features, not empty folders and TODOs.</p>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="icon">👥</div><h3>Multi-tenant organizations</h3><p>Every customer gets a workspace. Owner, Admin and Member roles, an organization switcher and onboarding.</p></div>
+      <div class="card"><div class="icon">🛡️</div><h3>Automatic data isolation</h3><p>Implement one interface and every query is filtered, new rows are stamped and cross-tenant writes are blocked.</p></div>
+      <div class="card"><div class="icon">💳</div><h3>Stripe subscriptions</h3><p>Plans in config, free trials, monthly and yearly prices, promotion codes, complimentary plans, Customer Portal, and webhooks that handle duplicates and out-of-order events.</p></div>
+      <div class="card"><div class="icon">✉️</div><h3>Invitations and email</h3><p>Expiring, single-use invite links bound to the invited address. Any SMTP provider, plus a dev outbox so you never need a mail server locally.</p></div>
+      <div class="card"><div class="icon">🔑</div><h3>Secure sign-in</h3><p>Email confirmation, password reset, two-factor authentication, passkeys, and Google and Microsoft sign-in.</p></div>
+      <div class="card"><div class="icon">🚀</div><h3>Marketing site and SEO</h3><p>Landing page, pricing, a Markdown blog, Open Graph cards, structured data, sitemap and robots.txt.</p></div>
+      <div class="card"><div class="icon">📊</div><h3>Your admin area</h3><p>Monthly recurring revenue, paying organizations, sign-ups, and searchable customers and users.</p></div>
+      <div class="card"><div class="icon">🛰️</div><h3>.NET Aspire ready</h3><p>One command starts PostgreSQL, Mailpit and the Aspire dashboard with logs, traces and metrics. OpenTelemetry built in.</p></div>
+      <div class="card"><div class="icon">🗄️</div><h3>Three databases</h3><p>SQLite for development, PostgreSQL or SQL Server for production, switched with one setting. One script migrates all three.</p></div>
+      <div class="card"><div class="icon">☁️</div><h3>Deploy with one command</h3><p><code>azd up</code> creates Azure Container Apps and PostgreSQL. Or use the Docker image anywhere.</p></div>
+      <div class="card"><div class="icon">🌙</div><h3>Light and dark themes</h3><p>A polished dark mode, plus automatic switching with the device. Re-brand everything by changing one color.</p></div>
+      <div class="card"><div class="icon">🌍</div><h3>Four languages, right-to-left ready</h3><p>English, Arabic, French and Spanish with full right-to-left layout. Add a language with one JSON file.</p></div>
+      <div class="card"><div class="icon">⚙️</div><h3>Settings and privacy</h3><p>Rename, leave, hand over or delete an organization, export its data, and account deletion that knows what to do with owned organizations.</p></div>
+      <div class="card"><div class="icon">✨</div><h3>AI, metered per plan</h3><p>A working AI feature on Microsoft.Extensions.AI: OpenAI, Azure OpenAI or Ollama, monthly allowances per plan, usage meters and token costs per customer.</p></div>
+      <div class="card"><div class="icon">🪝</div><h3>Outgoing webhooks</h3><p>Customers connect your product to Zapier or their own systems. Standard Webhooks signatures, retries, a delivery log and protection for your network.</p></div>
+      <div class="card"><div class="icon">🔌</div><h3>REST API with API keys</h3><p>Customers create keys and call your API. Keys are hashed and scoped to one organization, with rate limiting and an OpenAPI description.</p></div>
+      <div class="card"><div class="icon">📎</div><h3>File uploads</h3><p>Private files per organization with storage quotas per plan, on local disk or Azure Blob Storage.</p></div>
+      <div class="card"><div class="icon">🧾</div><h3>Activity log</h3><p>Who invited whom, changed the plan or deleted a project, for each organization and across your whole site.</p></div>
+      <div class="card"><div class="icon">🔔</div><h3>Notifications and background jobs</h3><p>An in-app bell with unread counts, an email queue that retries failures, and daily trial reminders and cleanup.</p></div>
+      <div class="card"><div class="icon">🛟</div><h3>Log in as a customer</h3><p>See exactly what a customer sees when they ask for help, with a clear banner and every action recorded.</p></div>
+      <div class="card"><div class="icon">🎬</div><h3>Sample data and a live demo</h3><p>Realistic organizations, people, files and activity with one setting, and a demo mode with a "Try the live demo" button that resets nightly.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="code">
+  <div class="wrap code-grid">
+    <div>
+      <div class="eyebrow">How it works</div>
+      <h2>Tenant isolation you don't have to remember</h2>
+      <p class="lead">Add an entity, implement <code>ITenantEntity</code>, and you're done. ShipBlazor handles the rest on every query and every save.</p>
+      <ul class="checks">
+        <li>Queries only return the current organization's rows</li>
+        <li>New rows get the right organization automatically</li>
+        <li>Writes to another organization's data are refused</li>
+        <li>No organization? Queries return nothing. It fails closed.</li>
+      </ul>
+    </div>
+<pre class="code"><span class="k">public class</span> <span class="t">Invoice</span> : <span class="t">ITenantEntity</span>
+{
+    <span class="k">public</span> <span class="t">Guid</span> Id { <span class="k">get</span>; <span class="k">set</span>; }
+    <span class="k">public</span> <span class="t">Guid</span> OrganizationId { <span class="k">get</span>; <span class="k">set</span>; } <span class="c">// set for you</span>
+    <span class="k">public decimal</span> Amount { <span class="k">get</span>; <span class="k">set</span>; }
+}
+
+<span class="c">// In any page:</span>
+<span class="k">await using var</span> db = <span class="k">await</span> Tenant.CreateDbContextAsync();
+<span class="k">var</span> invoices = <span class="k">await</span> db.Invoices.ToListAsync();
+<span class="c">// → only this organization's invoices</span>
+
+db.Invoices.Add(<span class="k">new</span>() { Amount = <span class="s">99m</span> });
+<span class="k">await</span> db.SaveChangesAsync();
+<span class="c">// → OrganizationId stamped automatically</span></pre>
+  </div>
+</section>
+
+<section class="principles">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Why ShipBlazor</div>
+      <h2>Built for solo developers, not enterprise committees</h2>
+      <p class="lead">Most .NET boilerplates come with a project for every layer. ShipBlazor keeps things simple so you can move fast and still sleep at night.</p>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="icon">📁</div><h3>One project, feature folders</h3><p>Each feature keeps its entity, logic and pages together. No maze of layers, mappers and mediators.</p></div>
+      <div class="card"><div class="icon">✅</div><h3>Tested end to end</h3><p>51 C# integration tests (dotnet test, on SQLite and PostgreSQL, with GitHub Actions ready) and 160 end-to-end checks that drive the real pages.</p></div>
+      <div class="card"><div class="icon">⚡</div><h3>A feature in one command</h3><p><code>add-feature Invoice</code> creates the entity, pages, API, webhooks, activity log, migrations for three databases and tests. Customize from there.</p></div>
+      <div class="card"><div class="icon">🤖</div><h3>Ready for AI assistants</h3><p>AGENTS.md, CLAUDE.md and Copilot instructions teach Copilot, Claude Code and Cursor the architecture and the safety rules, so their code fits from the first prompt.</p></div>
+      <div class="card"><div class="icon">▶️</div><h3>Running in two minutes</h3><p>Double-click <code>start.cmd</code>: the app opens with realistic sample data. No database or email server to set up.</p></div>
+      <div class="card"><div class="icon">📚</div><h3>Documented for humans</h3><p>Twenty-one guides, from first run to go-live, plus AGENTS.md for your AI assistant, including a walkthrough that adds a complete feature in ten minutes.</p></div>
+    </div>
+    <div class="stack">
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">.NET 10 LTS</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">Blazor</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">EF Core 10</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">PostgreSQL</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">SQL Server</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">SQLite</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">Stripe</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">Docker</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">Azure Container Apps</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">Bootstrap 5</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">Dark mode</span>
+      <span class="chip" style="background:transparent;color:#cfd3ea;border-color:rgba(255,255,255,.14)">RTL + 4 languages</span>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Pricing</div>
+      <h2>Pay once. Ship as many products as you like.</h2>
+      <p class="lead">One payment, no subscription. <b>Launch offer:</b> 30% off with code <code>LAUNCH30</code> for the first two weeks.</p>
+    </div>
+    <div class="plans">
+      <div class="plan featured">
+        <span class="badge">Most popular</span>
+        <h3>Solo</h3>
+        <div class="price"><b>$149</b></div>
+        <div class="sub">$104 with code LAUNCH30 at launch</div>
+        <div class="sub">One developer</div>
+        <ul class="checks">
+          <li>Full source code and <code>dotnet new</code> template</li>
+          <li>Unlimited projects, including client work</li>
+          <li>All documentation and the test suite</li>
+          <li>12 months of updates</li>
+          <li>Email support</li>
+        </ul>
+        <a class="btn btn-primary" data-checkout="solo" href="#">Get Solo</a>
+      </div>
+      <div class="plan">
+        <h3>Team</h3>
+        <div class="price"><b>$349</b></div>
+        <div class="sub">$244 with code LAUNCH30 at launch</div>
+        <div class="sub">Up to 5 developers in one company</div>
+        <ul class="checks">
+          <li>Everything in Solo</li>
+          <li>Five developer seats</li>
+          <li>Priority email support</li>
+        </ul>
+        <a class="btn btn-outline" data-checkout="team" href="#">Get Team</a>
+      </div>
+    </div>
+    <p class="guarantee">Secure checkout. Prices in USD; tax added where required.</p>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="center">
+      <h2>Questions</h2>
+    </div>
+    <div class="faq">
+      <details><summary>What exactly do I get?</summary><p>The complete source code as a <code>dotnet new</code> template package plus a zip of the project, the documentation, the end-to-end tests, Docker files and the Azure templates. You install the template once and create new products with <code>dotnet new shipblazor -n YourApp</code>; every name in the code becomes yours.</p></details>
+      <details><summary>Which versions does it use?</summary><p>.NET 10 (long-term support), Blazor with server-side rendering, EF Core 10 and Bootstrap 5. Pages are server-rendered by default for speed and SEO; add interactivity to any page with one line.</p></details>
+      <details><summary>Do I need Azure?</summary><p>No. The Azure setup is there if you want one-command deployment, but the app is a standard Docker image that runs on any host, with PostgreSQL, SQL Server or SQLite.</p></details>
+      <details><summary>Can I use it for client projects?</summary><p>Yes. Build as many end products as you like, for yourself or for clients. You can't resell or publish ShipBlazor itself as a template or starter kit.</p></details>
+      <details><summary>I'm new to Blazor. Is that OK?</summary><p>If you know C# and ASP.NET Core you'll be at home. The code is deliberately simple, and the guides walk you through adding your first feature step by step.</p></details>
+      <details><summary>How do updates work?</summary><p>You get new versions for 12 months. Because the code becomes yours, updates come with a changelog listing what changed so you can bring in what you need.</p></details>
+      <details><summary>What if it's not right for me?</summary><p>Email us within 14 days of purchase and we'll refund you.</p></details>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="final">
+    <h2>Stop rebuilding the plumbing</h2>
+    <p class="lead" style="color:#ddd6ff;margin:0 auto 28px">Start your next SaaS on a foundation that already works.</p>
+    <a class="btn" data-checkout="solo" href="#pricing">Get ShipBlazor for $149</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 ShipBlazor</div>
+    <div>
+      <a href="mailto:shipblazor@outlook.com">Contact</a>
+      <a href="/terms">Terms</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Checkout links: every "Get" button uses them. Buyers choose Solo or Team on the Gumroad page.
+  // During the launch, add the code to the link so it's applied automatically: ".../l/xuczqa/LAUNCH30".
+  const CHECKOUT = {
+    solo: "https://olowoyeye.gumroad.com/l/xuczqa",
+    team: "https://olowoyeye.gumroad.com/l/xuczqa",
+  };
+  // The live demo (Demo:Enabled). Leave empty to hide the "Try the live demo" buttons.
+  const DEMO = "";
+  document.querySelectorAll("[data-demo]").forEach(a => { if (DEMO) a.href = DEMO; else a.remove(); });
+  document.querySelectorAll("[data-checkout]").forEach(a => {
+    const url = CHECKOUT[a.dataset.checkout];
+    if (url) a.href = url; else if (a.getAttribute("href") === "#") a.href = "#pricing";
+  });
+</script>
+</body>
+</html>
